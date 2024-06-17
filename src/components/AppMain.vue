@@ -69,8 +69,8 @@ export default {
         assists: [],
         activeSqr: [],
         activeSqrEnemy: [],
-        enemyGrid: ["Name", "HP", "CD", "1L", "2L", "FY", "Hd", "Assist", "Remove"],
-        enemies: [{ nome: "Dargh", hp: "5", cd: "6", id: "00000000" }],
+        enemyGrid: ["Name", "HP", "CD", "Target", "1L", "2L", "FY", "Hd", "Assist", "Remove"],
+        enemies: [{ nome: "Dargh", hp: "5", cd: "7", id: "00000000" }],
         newEnemyName: "",
         newEnemyHP: "",
         newEnemyCD: "",
@@ -176,6 +176,22 @@ export default {
         makeVisible() {
             this.isHidden = !this.isHidden;
         },
+        rollDice() {
+            this.heroes.forEach((hero) => {
+                let count = 0;
+                const interval = setInterval(() => {
+                    if (count === 0) hero.rollResult = "";
+                    if (count < 3) {
+                        hero.rollResult += "?";
+                        count++;
+                    } else {
+                        clearInterval(interval);
+                        hero.rollResult = Math.floor(Math.random() * 10) + 1;
+                        hero.rollResult = hero.rollResult.toString();
+                    }
+                }, 500)
+            });
+        },
         emptyRolls() {
             this.heroes.forEach((hero) => hero.rollResult = "???")
         }
@@ -259,12 +275,14 @@ export default {
                 <!-- risultato dadi -->
                 <div id="roll-area" :class="{ 'd-none': !isHidden }">
                     <div class="h-square">
+                        <!-- pulsante rolla tutti -->
+                        <button @click="rollDice()">Roll all</button>
                         <!-- riquadri -->
                         <h4 class="results" role="button" v-for="(hero, i) in heroes" @click="resetRoll(i)"
                             :style="{ borderColor: hero.color, borderStyle: 'solid', borderWidth: '2px' }">
                             {{ hero.rollResult }}
                         </h4>
-                        <!-- pulsante -->
+                        <!-- pulsante reset rolls -->
                         <button @click="emptyRolls()">Reset Rolls</button>
                     </div>
                 </div>
@@ -324,6 +342,10 @@ export default {
                             </div>
                             <!-- cd -->
                             <div class="td">{{ (e.cd) }}</div>
+                            <!-- target -->
+                            <div class="target">
+                                <input type="number" class="td">
+                            </div>
                             <!-- position -->
                             <div v-for="n in 4" class="td"
                                 :class="`tde${n}${e.id}`, { 'active': activeSqrEnemy.includes(`tde${n}${e.id}`) }"
@@ -357,7 +379,8 @@ export default {
                     </div>
                 </section>
                 <!-- add enemies -->
-                <section id="new-enemies" class="mt-4 d-flex justify-content-center" :class="{ 'd-none': !isHidden }">
+                <section id="new-enemies" class="mt-4 d-flex justify-content-center" :class="{ 'd-none': !isHidden }"
+                    @keyup.enter="addEnemy()">
                     <input type="text" placeholder="Nome nemico" v-model="newEnemyName">
                     <input type="number" placeholder="HP nemico" v-model="newEnemyHP">
                     <input type="number" placeholder="CD nemico" v-model="newEnemyCD">
@@ -388,7 +411,7 @@ export default {
 }
 
 #e-grid {
-    width: 900px;
+    width: 1000px;
     align-self: flex-end;
     flex-wrap: wrap;
 }
