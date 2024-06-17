@@ -68,11 +68,12 @@ export default {
         activeShield: [],
         activeSqr: [],
         activeSqrEnemy: [],
-        enemyGrid: ["Name", "CD", "1L", "2L", "FY", "Hd", "HP", "Assist", "Remove"],
+        enemyGrid: ["Name", "HP", "CD", "1L", "2L", "FY", "Hd", "Assist", "Remove"],
         enemies: [{ nome: "Dargh", hp: "5", cd: "6" }],
         newEnemyName: "",
         newEnemyHP: "",
-        newEnemyCD: ""
+        newEnemyCD: "",
+        isHidden: true
     }),
     methods: {
 
@@ -159,8 +160,13 @@ export default {
         goToNewRound() {
             this.activeShield = this.activeShield.filter((shield) => shield.includes("e"));
             this.activeSqr = [];
-            this.activeSqrEnemy = [];
-            this.heroes.forEach((hero) => hero.rollResult = "???");
+            this.emptyRolls();
+        },
+        makeVisible() {
+            this.isHidden = !this.isHidden;
+        },
+        emptyRolls() {
+            this.heroes.forEach((hero) => hero.rollResult = "???")
         }
     }
 }
@@ -172,7 +178,8 @@ export default {
         <section id="sidebar">
             <div class="sb-h-quick d-flex" v-for="(hero, i) in heroes" :key="hero.id">
                 <!-- hero name -->
-                <div class="name d-flex justify-content-center align-items-center" :class="`name${i}`">
+                <div class="name d-flex justify-content-center align-items-center" :class="`name${i}`"
+                    @click="makeVisible()">
                     <h2>{{ hero.hName.split(',')[0] }}</h2>
                 </div>
                 <div class="actions d-flex justify-content-center align-items-center flex-column px-2">
@@ -212,17 +219,8 @@ export default {
         <!-- wrapper -->
         <div class="wrapper">
             <div class="container my-4">
-                <div id="roll-area">
-                    <div class="h-square">
-                        <h4 class="results" role="button" v-for="(hero, i) in heroes" @click="resetRoll(i)"
-                            :style="{ borderColor: hero.color, borderStyle: 'solid', borderWidth: '2px' }">
-                            {{ hero.rollResult }}
-                        </h4>
-                    </div>
-                </div>
-
                 <!-- sezione eroi -->
-                <section id="heroes" class="h-row row text-center d-none">
+                <section id="heroes" class="h-row row row-cols-2 text-center" :class="{ 'd-none': isHidden }">
                     <!-- singolo eroe -->
                     <div class="h-col col-3" v-for="(hero, i) in heroes" :key="hero.id">
                         <div class="h-card px-3">
@@ -230,24 +228,6 @@ export default {
                             <h3 class="h-name">{{ hero.hName }}</h3>
                             <!-- colore -->
                             <div class="h-color" :style="{ backgroundColor: hero.color }"></div>
-                            <!-- stamina -->
-                            <h4>Stamina</h4>
-                            <div class="stamina d-flex justify-content-center align-items-center gap-3">
-                                <button class="btn btn-outline-secondary btn-sm"
-                                    @click="updateStmnRpt('stmn', 'incr', i)">+</button>
-                                <p class="m-0 fs-4">{{ hero.currentStmn }}</p>
-                                <button class="btn btn-outline-secondary btn-sm"
-                                    @click="updateStmnRpt('stmn', 'decr', i)">-</button>
-                            </div>
-                            <!-- reputazione -->
-                            <h4>Reputation</h4>
-                            <div class="reputation d-flex justify-content-center align-items-center gap-3">
-                                <button class="btn btn-outline-secondary btn-sm"
-                                    @click="updateStmnRpt('rpt', 'incr', i)">+</button>
-                                <p class="m-0 fs-4">{{ hero.currentRpt }}</p>
-                                <button class="btn btn-outline-secondary btn-sm"
-                                    @click="updateStmnRpt('rpt', 'decr', i)">-</button>
-                            </div>
                             <!-- statistiche -->
                             <h4>Stats</h4>
                             <ul class="stats row row-cols-2 list-unstyled w-75 mx-auto">
@@ -262,18 +242,21 @@ export default {
                                     <b>{{ firstLetterToCapital(action) }}</b>
                                 </li>
                             </ul>
-                            <!-- roll d10 button -->
-                            <button class="roll-button" :style="{ backgroundColor: hero.color }" @click="rollD10(i)"
-                                :disabled="disabledButtons.includes(i)">
-                                Roll d10
-                            </button>
-                            <h4 role="button" @click="resetRoll(i)">{{ hero.rollResult
-                                }}</h4>
                         </div>
                     </div>
                 </section>
+                <!-- risultato dadi -->
+                <div id="roll-area" :class="{ 'd-none': !isHidden }">
+                    <div class="h-square">
+                        <h4 class="results" role="button" v-for="(hero, i) in heroes" @click="resetRoll(i)"
+                            :style="{ borderColor: hero.color, borderStyle: 'solid', borderWidth: '2px' }">
+                            {{ hero.rollResult }}
+                        </h4>
+                        <button @click="emptyRolls()">Reset Rolls</button>
+                    </div>
+                </div>
                 <!-- griglie combattimento -->
-                <section id="battlefield">
+                <section id="battlefield" :class="{ 'd-none': !isHidden }">
                     <!-- hero grid -->
                     <div id="h-grid" class="d-flex">
                         <!-- table header -->
@@ -312,10 +295,6 @@ export default {
                         <!-- table body -->
                         <div class="tr d-flex" v-for="(e, i) in enemies">
                             <div class="td">{{ firstLetterToCapital(e.nome) }}</div>
-                            <div class="td">{{ (e.cd) }}</div>
-                            <div v-for="n in 4" class="td"
-                                :class="`tde${n}${i}`, { 'active': activeSqrEnemy.includes(`tde${n}${i}`) }"
-                                @click="toggleActiveSqrEnemy(`tde${n}${i}`)"></div>
                             <div class="td gap-1">
                                 <button class="ehp" @click="incrEnemyHP(i)"><font-awesome-icon
                                         icon="fa-solid fa-plus" /></button>
@@ -323,6 +302,10 @@ export default {
                                 <button class="ehp" @click="decrEnemyHP(i)"><font-awesome-icon
                                         icon="fa-solid fa-minus" /></button>
                             </div>
+                            <div class="td">{{ (e.cd) }}</div>
+                            <div v-for="n in 4" class="td"
+                                :class="`tde${n}${i}`, { 'active': activeSqrEnemy.includes(`tde${n}${i}`) }"
+                                @click="toggleActiveSqrEnemy(`tde${n}${i}`)"></div>
                             <div class="td gap-1">
                                 <font-awesome-icon icon="fa-solid fa-khanda" class="shield shield-r"
                                     :class="`er${i}`, { 'active': activeShield.includes(`er${i}`) }"
@@ -345,13 +328,14 @@ export default {
                     </div>
                 </section>
                 <!-- add enemies -->
-                <section id="new-enemies" class="mt-4 d-flex justify-content-center">
+                <section id="new-enemies" class="mt-4 d-flex justify-content-center" :class="{ 'd-none': !isHidden }">
                     <input type="text" placeholder="Nome nemico" v-model="newEnemyName">
                     <input type="number" placeholder="HP nemico" v-model="newEnemyHP">
+                    <input type="number" placeholder="CD nemico" v-model="newEnemyCD">
                     <button @click="addEnemy()" @submit.self.prevent>Aggiungi</button>
                 </section>
                 <!-- refresh shields and positions -->
-                <section id="new-round" class="mt-4 d-flex justify-content-center">
+                <section id="new-round" class="mt-4 d-flex justify-content-center" :class="{ 'd-none': !isHidden }">
                     <button @click="goToNewRound()">Nuovo Round</button>
                 </section>
             </div>
@@ -533,6 +517,7 @@ export default {
     writing-mode: vertical-rl;
     text-orientation: mixed;
     height: calc((100vh - 100px)/4);
+    cursor: pointer;
 }
 
 .name0 {
@@ -595,5 +580,13 @@ export default {
 
 #sidebar .actions {
     width: 45%;
+}
+
+.heroes {
+    position: absolute;
+    top: 0;
+    left: 180px;
+    right: 0;
+    bottom: 0;
 }
 </style>
