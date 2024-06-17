@@ -66,10 +66,11 @@ export default {
         ],
         disabledButtons: [],
         activeShield: [],
+        assists: [],
         activeSqr: [],
         activeSqrEnemy: [],
         enemyGrid: ["Name", "HP", "CD", "1L", "2L", "FY", "Hd", "Assist", "Remove"],
-        enemies: [{ nome: "Dargh", hp: "5", cd: "6" }],
+        enemies: [{ nome: "Dargh", hp: "5", cd: "6", id: "00000000" }],
         newEnemyName: "",
         newEnemyHP: "",
         newEnemyCD: "",
@@ -127,6 +128,13 @@ export default {
                 this.activeShield.push(shield);
             }
         },
+        toggleAssist(assist) {
+            if (this.assists.includes(assist)) {
+                this.assists.splice(this.assists.indexOf(assist), 1);
+            } else {
+                this.assists.push(assist);
+            }
+        },
         toggleActiveSqr(sqr) {
             if (this.activeSqr.includes(sqr)) {
                 this.activeSqr.splice(this.activeSqr.indexOf(sqr), 1);
@@ -147,8 +155,11 @@ export default {
         decrEnemyHP(i) {
             this.enemies[i].hp--;
         },
+        generateId() {
+            return Date.now().toString(36);
+        },
         addEnemy() {
-            const newEnemy = { nome: this.newEnemyName, hp: this.newEnemyHP, cd: this.newEnemyCD };
+            const newEnemy = { nome: this.newEnemyName, hp: this.newEnemyHP, cd: this.newEnemyCD, id: this.generateId() };
             this.enemies.push(newEnemy);
             this.newEnemyName = "";
             this.newEnemyHP = "";
@@ -158,7 +169,7 @@ export default {
             this.enemies.splice(i, 1);
         },
         goToNewRound() {
-            this.activeShield = this.activeShield.filter((shield) => shield.includes("e"));
+            this.activeShield = [];
             this.activeSqr = [];
             this.emptyRolls();
         },
@@ -248,10 +259,12 @@ export default {
                 <!-- risultato dadi -->
                 <div id="roll-area" :class="{ 'd-none': !isHidden }">
                     <div class="h-square">
+                        <!-- riquadri -->
                         <h4 class="results" role="button" v-for="(hero, i) in heroes" @click="resetRoll(i)"
                             :style="{ borderColor: hero.color, borderStyle: 'solid', borderWidth: '2px' }">
                             {{ hero.rollResult }}
                         </h4>
+                        <!-- pulsante -->
                         <button @click="emptyRolls()">Reset Rolls</button>
                     </div>
                 </div>
@@ -294,32 +307,48 @@ export default {
                         <div v-for="enemyCell in enemyGrid" class="td">{{ enemyCell }}</div>
                         <!-- table body -->
                         <div class="tr d-flex" v-for="(e, i) in enemies">
+                            <!-- nome -->
                             <div class="td">{{ firstLetterToCapital(e.nome) }}</div>
+                            <!-- hp -->
                             <div class="td gap-1">
-                                <button class="ehp" @click="incrEnemyHP(i)"><font-awesome-icon
-                                        icon="fa-solid fa-plus" /></button>
+                                <!-- aumenta -->
+                                <button class="ehp" @click="incrEnemyHP(i)">
+                                    <font-awesome-icon icon="fa-solid fa-plus" />
+                                </button>
+                                <!-- attuali -->
                                 <span>{{ e.hp }}</span>
-                                <button class="ehp" @click="decrEnemyHP(i)"><font-awesome-icon
-                                        icon="fa-solid fa-minus" /></button>
+                                <!-- riduci -->
+                                <button class="ehp" @click="decrEnemyHP(i)">
+                                    <font-awesome-icon icon="fa-solid fa-minus" />
+                                </button>
                             </div>
+                            <!-- cd -->
                             <div class="td">{{ (e.cd) }}</div>
+                            <!-- position -->
                             <div v-for="n in 4" class="td"
-                                :class="`tde${n}${i}`, { 'active': activeSqrEnemy.includes(`tde${n}${i}`) }"
-                                @click="toggleActiveSqrEnemy(`tde${n}${i}`)"></div>
-                            <div class="td gap-1">
-                                <font-awesome-icon icon="fa-solid fa-khanda" class="shield shield-r"
-                                    :class="`er${i}`, { 'active': activeShield.includes(`er${i}`) }"
-                                    @click="toggleActiveShield(`er${i}`)" />
-                                <font-awesome-icon icon="fa-solid fa-khanda" class="shield shield-w"
-                                    :class="`ew${i}`, { 'active': activeShield.includes(`ew${i}`) }"
-                                    @click="toggleActiveShield(`ew${i}`)" />
-                                <font-awesome-icon icon="fa-solid fa-khanda" class="shield shield-y"
-                                    :class="`ey${i}`, { 'active': activeShield.includes(`ey${i}`) }"
-                                    @click="toggleActiveShield(`ey${i}`)" />
-                                <font-awesome-icon icon="fa-solid fa-khanda" class="shield shield-b"
-                                    :class="`eb${i}`, { 'active': activeShield.includes(`eb${i}`) }"
-                                    @click="toggleActiveShield(`eb${i}`)" />
+                                :class="`tde${n}${e.id}`, { 'active': activeSqrEnemy.includes(`tde${n}${e.id}`) }"
+                                @click="toggleActiveSqrEnemy(`tde${n}${e.id}`)">
                             </div>
+                            <!-- assist -->
+                            <div class="td gap-1">
+                                <!-- rosso -->
+                                <font-awesome-icon icon="fa-solid fa-khanda" class="shield shield-r"
+                                    :class="`er${e.id}`, { 'active': assists.includes(`er${e.id}`) }"
+                                    @click="toggleAssist(`er${e.id}`)" />
+                                <!-- bianco -->
+                                <font-awesome-icon icon="fa-solid fa-khanda" class="shield shield-w"
+                                    :class="`ew${e.id}`, { 'active': assists.includes(`ew${e.id}`) }"
+                                    @click="toggleAssist(`ew${e.id}`)" />
+                                <!-- giallo -->
+                                <font-awesome-icon icon="fa-solid fa-khanda" class="shield shield-y"
+                                    :class="`ey${e.id}`, { 'active': assists.includes(`ey${e.id}`) }"
+                                    @click="toggleAssist(`ey${e.id}`)" />
+                                <!-- blu -->
+                                <font-awesome-icon icon="fa-solid fa-khanda" class="shield shield-b"
+                                    :class="`eb${e.id}`, { 'active': assists.includes(`eb${e.id}`) }"
+                                    @click="toggleAssist(`eb${e.id}`)" />
+                            </div>
+                            <!-- rimuovi nemico -->
                             <div class="td remove-enemy" @click="removeEnemy(i)">
                                 <font-awesome-icon icon="fa-solid fa-skull" class="me-1" />
                                 <font-awesome-icon icon="fa-solid fa-x" />
@@ -334,7 +363,7 @@ export default {
                     <input type="number" placeholder="CD nemico" v-model="newEnemyCD">
                     <button @click="addEnemy()" @submit.self.prevent>Aggiungi</button>
                 </section>
-                <!-- refresh shields and positions -->
+                <!-- refresh dice, shields and hero positions -->
                 <section id="new-round" class="mt-4 d-flex justify-content-center" :class="{ 'd-none': !isHidden }">
                     <button @click="goToNewRound()">Nuovo Round</button>
                 </section>
