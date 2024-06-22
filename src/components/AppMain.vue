@@ -102,7 +102,7 @@ export default {
         activeSqr: [],
         activeSqrEnemy: [],
         enemyGrid: ["Name", "HP", "CD", "Target", "1L", "2L", "FY", "Hd", "Assist", "Remove"],
-        enemies: [{ nome: "Dargh", hp: "5", cd: "7", id: "00000000", tg: "5" }],
+        enemies: [{ nome: "Dargh", hp: "5", cd: "7", id: "00000000", tg: "" }],
         newEnemyName: "",
         newEnemyHP: "",
         newEnemyCD: "",
