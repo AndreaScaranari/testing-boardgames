@@ -64,6 +64,38 @@ export default {
                 actions: ["spell", "sorcery"]
             }
         ],
+        dbEnemies: [
+            {
+                id: 1,
+                eName: "Dargh",
+                hp: 5,
+                cd: 7
+            },
+            {
+                id: 2,
+                eName: "Darcher",
+                hp: 3,
+                cd: 6
+            },
+            {
+                id: 3,
+                eName: "Darcane",
+                hp: 2,
+                cd: 6
+            },
+            {
+                id: 4,
+                eName: "Dargmored",
+                hp: 6,
+                cd: 8
+            },
+            {
+                id: 5,
+                eName: "Dargberration",
+                hp: 8,
+                cd: 9
+            }
+        ],
         disabledButtons: [],
         activeShield: [],
         assists: [],
@@ -158,12 +190,17 @@ export default {
         generateId() {
             return Date.now().toString(36);
         },
-        addEnemy() {
-            const newEnemy = { nome: this.newEnemyName, hp: this.newEnemyHP, cd: this.newEnemyCD, id: this.generateId() };
+        addEnemy(e) {
+            let newEnemy = {};
+            if (e) {
+                newEnemy = { nome: e.eName, hp: e.hp, cd: e.cd, id: this.generateId() };
+            } else {
+                newEnemy = { nome: this.newEnemyName, hp: this.newEnemyHP, cd: this.newEnemyCD, id: this.generateId() };
+                this.newEnemyName = "";
+                this.newEnemyHP = "";
+                this.newEnemyCD = "";
+            }
             this.enemies.push(newEnemy);
-            this.newEnemyName = "";
-            this.newEnemyHP = "";
-            this.newEnemyCD = "";
         },
         removeEnemy(i) {
             this.enemies.splice(i, 1);
@@ -378,7 +415,15 @@ export default {
                         </div>
                     </div>
                 </section>
-                <!-- add enemies -->
+                <!-- add enemy -->
+                <section id="add-enemy" class="mt-4 d-flex justify-content-center">
+                    <ul class="d-flex justify-content-center gap-1 mb-0">
+                        <li v-for="e in dbEnemies" :key="e.id" class="list-unstyled">
+                            <button @click="addEnemy(e)">{{ e.eName }}</button>
+                        </li>
+                    </ul>
+                </section>
+                <!-- add new stats enemy -->
                 <section id="new-enemies" class="mt-4 d-flex justify-content-center" :class="{ 'd-none': !isHidden }"
                     @keyup.enter="addEnemy()">
                     <input type="text" placeholder="Nome nemico" v-model="newEnemyName">
