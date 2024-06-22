@@ -101,6 +101,7 @@ export default {
         assists: [],
         activeSqr: [],
         activeSqrEnemy: [],
+        activeGauges: [],
         enemyGrid: ["Name", "HP", "CD", "Target", "1L", "2L", "FY", "Hd", "Assist", "Remove"],
         enemies: [{ nome: "Dargh", hp: "5", cd: "7", id: "00000000", tg: "" }],
         newEnemyName: "",
@@ -109,7 +110,6 @@ export default {
         isHidden: true
     }),
     methods: {
-
         createImagePath(img_name) {
             const url = new URL(`../assets/${img_name}`, import.meta.url);
             return url.href;
@@ -158,6 +158,13 @@ export default {
                 this.activeShield.splice(this.activeShield.indexOf(shield), 1);
             } else {
                 this.activeShield.push(shield);
+            }
+        },
+        toggleActiveGauge(gauge) {
+            if (this.activeGauges.includes(gauge)) {
+                this.activeGauges.splice(this.activeGauges.indexOf(gauge), 1);
+            } else {
+                this.activeGauges.push(gauge);
             }
         },
         toggleAssist(assist) {
@@ -353,31 +360,33 @@ export default {
                         <div v-for="n in 4" class="td">{{ (-5 + n) * -1 }}</div>
                         <div class="td">Dif</div>
                         <!-- table body -->
-                        <div class="tr d-flex" v-for="n in 4">
+                        <div class="tr d-flex" v-for="(hero, i) in heroes">
                             <!-- nome -->
-                            <div class="td td-hName">
-                                {{ heroes[n - 1].hName.split(',')[0] }}
-                                <font-awesome-icon icon="fa-solid fa-bolt" :class="`fa-bolt${n - 1}`" />
+                            <div class="td td-hName" @click="toggleActiveGauge(`fa-bolt${i}`)">
+                                {{ hero.hName.split(',')[0] }}
+                                <!-- gauge -->
+                                <font-awesome-icon icon="fa-solid fa-bolt" class="generic"
+                                    :class="`fa-bolt${i}`, { 'active': activeGauges.includes(`fa-bolt${i}`) }" />
                             </div>
                             <!-- posizione -->
                             <div v-for="m in 4" class="td"
-                                :class="`td${n}${m}`, { 'active': activeSqr.includes(`td${n}${m}`) }"
-                                @click="toggleActiveSqr(`td${n}${m}`)">
+                                :class="`td${i}${m}`, { 'active': activeSqr.includes(`td${i}${m}`) }"
+                                @click="toggleActiveSqr(`td${i}${m}`)">
                             </div>
                             <!-- difese -->
                             <div class="td gap-1">
                                 <font-awesome-icon icon="fa-solid fa-shield" class="shield shield-r"
-                                    :class="`r${n}`, { 'active': activeShield.includes(`r${n}`) }"
-                                    @click="toggleActiveShield(`r${n}`)" />
+                                    :class="`r${i}`, { 'active': activeShield.includes(`r${i}`) }"
+                                    @click="toggleActiveShield(`r${i}`)" />
                                 <font-awesome-icon icon="fa-solid fa-shield" class="shield shield-w"
-                                    :class="`w${n}`, { 'active': activeShield.includes(`w${n}`) }"
-                                    @click="toggleActiveShield(`w${n}`)" />
+                                    :class="`w${i}`, { 'active': activeShield.includes(`w${i}`) }"
+                                    @click="toggleActiveShield(`w${i}`)" />
                                 <font-awesome-icon icon="fa-solid fa-shield" class="shield shield-y"
-                                    :class="`y${n}`, { 'active': activeShield.includes(`y${n}`) }"
-                                    @click="toggleActiveShield(`y${n}`)" />
+                                    :class="`y${i}`, { 'active': activeShield.includes(`y${i}`) }"
+                                    @click="toggleActiveShield(`y${i}`)" />
                                 <font-awesome-icon icon="fa-solid fa-shield" class="shield shield-b"
-                                    :class="`b${n}`, { 'active': activeShield.includes(`b${n}`) }"
-                                    @click="toggleActiveShield(`b${n}`)" />
+                                    :class="`b${i}`, { 'active': activeShield.includes(`b${i}`) }"
+                                    @click="toggleActiveShield(`b${i}`)" />
                             </div>
                         </div>
                     </div>
@@ -522,39 +531,39 @@ export default {
     font-size: 0.9rem;
 }
 
-[class*="td1"]:hover {
+[class*="td0"]:hover {
     background-color: #e81010;
+    filter: opacity(0.4);
+}
+
+[class*="td0"].active {
+    background-color: #e81010;
+}
+
+[class*="td1"]:hover {
+    background-color: #b0c9ff;
     filter: opacity(0.4);
 }
 
 [class*="td1"].active {
-    background-color: #e81010;
+    background-color: #b0c9ff;
 }
 
 [class*="td2"]:hover {
-    background-color: #b0c9ff;
+    background-color: #f8c52a;
     filter: opacity(0.4);
 }
 
 [class*="td2"].active {
-    background-color: #b0c9ff;
+    background-color: #f8c52a;
 }
 
 [class*="td3"]:hover {
-    background-color: #f8c52a;
-    filter: opacity(0.4);
-}
-
-[class*="td3"].active {
-    background-color: #f8c52a;
-}
-
-[class*="td4"]:hover {
     background-color: #35177f;
     filter: opacity(0.4);
 }
 
-[class*="td4"].active {
+[class*="td3"].active {
     background-color: #35177f;
 }
 
@@ -766,7 +775,27 @@ export default {
 }
 
 .fa-bolt:hover,
-.fa-bolt:active {
-    transform: scale(1.2);
+.fa-bolt.active {
+    transform: scale(1.3);
+}
+
+.fa-bolt0:hover,
+.fa-bolt0.active {
+    color: #e81010;
+}
+
+.fa-bolt1:hover,
+.fa-bolt1.active {
+    color: #b0c9ff;
+}
+
+.fa-bolt2:hover,
+.fa-bolt2.active {
+    color: #f8c52a;
+}
+
+.fa-bolt3:hover,
+.fa-bolt3.active {
+    color: #35177f;
 }
 </style>
