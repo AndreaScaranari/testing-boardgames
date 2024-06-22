@@ -143,7 +143,7 @@ export default {
                     count++;
                 } else {
                     clearInterval(interval);
-                    const rollResult = Math.floor(Math.random() * 10) + 1;
+                    const rollResult = this.getRandomNumber(10);
                     this.heroes[i].rollResult = rollResult.toString();
                     this.disabledButtons.splice(this.disabledButtons.indexOf(i), 1);
                 }
@@ -209,6 +209,7 @@ export default {
             this.activeShield = [];
             this.activeSqr = [];
             this.emptyRolls();
+            this.resetTargets();
         },
         makeVisible() {
             this.isHidden = !this.isHidden;
@@ -223,7 +224,7 @@ export default {
                         count++;
                     } else {
                         clearInterval(interval);
-                        hero.rollResult = Math.floor(Math.random() * 10) + 1;
+                        hero.rollResult = this.getRandomNumber(10);
                         hero.rollResult = hero.rollResult.toString();
                     }
                 }, 500)
@@ -234,6 +235,19 @@ export default {
         },
         removeAllEnemies() {
             this.enemies = [];
+        },
+        getRandomNumber(max) {
+            return Math.floor(Math.random() * max) + 1;
+        },
+        getRandomTarget(id) {
+            const rN = this.getRandomNumber(4);
+            this.enemies.forEach((enemy) => { if (enemy.id == id) { enemy.tg = rN } });
+        },
+        getMassiveTarget() {
+            this.enemies.map((enemy) => { enemy.tg = this.getRandomNumber(4) });
+        },
+        resetTargets() {
+            this.enemies.map((enemy) => { enemy.tg = "" });
         }
     }
 }
@@ -241,7 +255,7 @@ export default {
 
 <template>
     <main class="d-flex">
-        <!-- sidebar -->
+        <!--* sidebar -->
         <section id="sidebar">
             <div class="sb-h-quick d-flex" v-for="(hero, i) in heroes" :key="hero.id">
                 <!-- hero name -->
@@ -283,10 +297,10 @@ export default {
                 </div>
             </div>
         </section>
-        <!-- wrapper -->
+        <!--* wrapper -->
         <div class="wrapper">
             <div class="container my-4">
-                <!-- sezione eroi -->
+                <!--* sezione eroi -->
                 <section id="heroes" class="h-row row row-cols-2 text-center" :class="{ 'd-none': isHidden }">
                     <!-- singolo eroe -->
                     <div class="h-col col-3" v-for="(hero, i) in heroes" :key="hero.id">
@@ -312,7 +326,7 @@ export default {
                         </div>
                     </div>
                 </section>
-                <!-- risultato dadi -->
+                <!--* risultato dadi -->
                 <div id="roll-area" :class="{ 'd-none': !isHidden }">
                     <div class="h-square">
                         <!-- pulsante rolla tutti -->
@@ -326,9 +340,9 @@ export default {
                         <button @click="emptyRolls()">Reset Rolls</button>
                     </div>
                 </div>
-                <!-- griglie combattimento -->
+                <!--* griglie combattimento -->
                 <section id="battlefield" :class="{ 'd-none': !isHidden }">
-                    <!-- hero grid -->
+                    <!--* hero grid -->
                     <div id="h-grid" class="d-flex">
                         <!-- table header -->
                         <div class="td">Nome</div>
@@ -359,7 +373,7 @@ export default {
                             </div>
                         </div>
                     </div>
-                    <!-- enemy grid -->
+                    <!--* enemy grid -->
                     <div id="e-grid" class="d-flex">
                         <!-- table header -->
                         <div v-for="enemyCell in enemyGrid" class="td">{{ enemyCell }}</div>
@@ -383,8 +397,11 @@ export default {
                             <!-- cd -->
                             <div class="td">{{ e.cd }}</div>
                             <!-- target -->
-                            <div class="target">
-                                <input type="number" min="1" max="4" class="td text-center" v-model="e.tg">
+                            <div class="target td">
+                                <button class="ehp tgr" @click="getRandomTarget(e.id)">
+                                    r
+                                </button>
+                                <input type="number" min="1" max="4" class="tg-area text-center" v-model="e.tg">
                             </div>
                             <!-- position -->
                             <div v-for="n in 4" class="td"
@@ -418,18 +435,16 @@ export default {
                         </div>
                     </div>
                 </section>
-                <!-- add enemy -->
+                <!--* add enemy -->
                 <section id="add-enemy" class="mt-4 d-flex justify-content-center">
                     <ul class="d-flex justify-content-center gap-1 mb-0 list-unstyled">
                         <li v-for="e in dbEnemies" :key="e.id">
                             <button @click="addEnemy(e)">{{ e.eName }}</button>
                         </li>
-                        <li>
-                            <button @click="removeAllEnemies()" class="bg-danger text-white">Rimuovi Nemici</button>
-                        </li>
+
                     </ul>
                 </section>
-                <!-- add new stats enemy -->
+                <!--* add new stats enemy -->
                 <section id="new-enemies" class="mt-4 d-flex justify-content-center" :class="{ 'd-none': !isHidden }"
                     @keyup.enter="addEnemy()">
                     <input type="text" placeholder="Nome nemico" v-model="newEnemyName">
@@ -437,7 +452,20 @@ export default {
                     <input type="number" placeholder="CD nemico" v-model="newEnemyCD">
                     <button @click="addEnemy()" @submit.self.prevent>Aggiungi</button>
                 </section>
-                <!-- refresh dice, shields and hero positions -->
+                <section id="massive-enemy-actions" class="mt-4 d-flex justify-content-center">
+                    <ul class="d-flex justify-content-center gap-1 mb-0 list-unstyled">
+                        <li>
+                            <button @click="getMassiveTarget()" class="bg-success text-white">Roll Targets</button>
+                        </li>
+                        <li>
+                            <button @click="resetTargets()" class="bg-warning">Reset Targets</button>
+                        </li>
+                        <li>
+                            <button @click="removeAllEnemies()" class="bg-danger text-white">Rimuovi Nemici</button>
+                        </li>
+                    </ul>
+                </section>
+                <!--* refresh dice, shields and hero positions -->
                 <section id="new-round" class="mt-4 d-flex justify-content-center" :class="{ 'd-none': !isHidden }">
                     <button @click="goToNewRound()">Nuovo Round</button>
                 </section>
@@ -692,5 +720,23 @@ export default {
     left: 180px;
     right: 0;
     bottom: 0;
+}
+
+.tg-area {
+    background-color: #f9f8f4;
+    border: none;
+    width: 100%;
+    padding-left: 20%;
+}
+
+.target {
+    position: relative;
+}
+
+.tgr {
+    position: absolute;
+    left: 30%;
+    top: 50%;
+    translate: -50% -50%;
 }
 </style>
