@@ -299,9 +299,9 @@ export default {
         </section>
         <!--* wrapper -->
         <div class="wrapper">
-            <div class="container my-4">
+            <div class="container my-4" v-if="!isHidden">
                 <!--* sezione eroi -->
-                <section id="heroes" class="h-row row row-cols-2 text-center" :class="{ 'd-none': isHidden }">
+                <section id="heroes" class="h-row row row-cols-2 text-center">
                     <!-- singolo eroe -->
                     <div class="h-col col-3" v-for="(hero, i) in heroes" :key="hero.id">
                         <div class="h-card px-3">
@@ -326,8 +326,10 @@ export default {
                         </div>
                     </div>
                 </section>
+            </div>
+            <div class="container my-4" v-else>
                 <!--* risultato dadi -->
-                <div id="roll-area" :class="{ 'd-none': !isHidden }">
+                <div id="roll-area">
                     <div class="h-square">
                         <!-- pulsante rolla tutti -->
                         <button @click="rollDice()">Roll all</button>
@@ -341,7 +343,7 @@ export default {
                     </div>
                 </div>
                 <!--* griglie combattimento -->
-                <section id="battlefield" :class="{ 'd-none': !isHidden }">
+                <section id="battlefield">
                     <!--* hero grid -->
                     <div id="h-grid" class="d-flex">
                         <!-- table header -->
@@ -445,8 +447,7 @@ export default {
                     </ul>
                 </section>
                 <!--* add new stats enemy -->
-                <section id="new-enemies" class="mt-4 d-flex justify-content-center" :class="{ 'd-none': !isHidden }"
-                    @keyup.enter="addEnemy()">
+                <section id="new-enemies" class="mt-4 d-flex justify-content-center" @keyup.enter="addEnemy()">
                     <input type="text" placeholder="Nome nemico" v-model="newEnemyName">
                     <input type="number" placeholder="HP nemico" v-model="newEnemyHP">
                     <input type="number" placeholder="CD nemico" v-model="newEnemyCD">
@@ -466,7 +467,7 @@ export default {
                     </ul>
                 </section>
                 <!--* refresh dice, shields and hero positions -->
-                <section id="new-round" class="mt-4 d-flex justify-content-center" :class="{ 'd-none': !isHidden }">
+                <section id="new-round" class="mt-4 d-flex justify-content-center">
                     <button @click="goToNewRound()">Nuovo Round</button>
                 </section>
             </div>
