@@ -231,6 +231,9 @@ export default {
         },
         emptyRolls() {
             this.heroes.forEach((hero) => hero.rollResult = "???")
+        },
+        removeAllEnemies() {
+            this.enemies = [];
         }
     }
 }
@@ -417,9 +420,12 @@ export default {
                 </section>
                 <!-- add enemy -->
                 <section id="add-enemy" class="mt-4 d-flex justify-content-center">
-                    <ul class="d-flex justify-content-center gap-1 mb-0">
-                        <li v-for="e in dbEnemies" :key="e.id" class="list-unstyled">
+                    <ul class="d-flex justify-content-center gap-1 mb-0 list-unstyled">
+                        <li v-for="e in dbEnemies" :key="e.id">
                             <button @click="addEnemy(e)">{{ e.eName }}</button>
+                        </li>
+                        <li>
+                            <button @click="removeAllEnemies()" class="bg-danger text-white">Rimuovi Nemici</button>
                         </li>
                     </ul>
                 </section>
