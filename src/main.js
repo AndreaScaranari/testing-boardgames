@@ -6,11 +6,10 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 // Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faShield, faKhanda, faMinus, faPlus, faX, faSkull } from '@fortawesome/free-solid-svg-icons'
+import { faShield, faKhanda, faMinus, faPlus, faX, faSkull, faBolt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faShield, faKhanda, faMinus, faPlus, faX, faSkull)
-
+library.add(faShield, faKhanda, faMinus, faPlus, faX, faSkull, faBolt)
 
 createApp(App)
 .component('font-awesome-icon', FontAwesomeIcon)

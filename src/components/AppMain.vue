@@ -81,7 +81,7 @@ export default {
                 id: 3,
                 eName: "Darcane",
                 hp: 2,
-                cd: 6
+                cd: 5
             },
             {
                 id: 4,
@@ -299,6 +299,7 @@ export default {
         </section>
         <!--* wrapper -->
         <div class="wrapper">
+            <!--* schede heroes -->
             <div class="container my-4" v-if="!isHidden">
                 <!--* sezione eroi -->
                 <section id="heroes" class="h-row row row-cols-2 text-center">
@@ -327,6 +328,7 @@ export default {
                     </div>
                 </section>
             </div>
+            <!--* boardgame testing -->
             <div class="container my-4" v-else>
                 <!--* risultato dadi -->
                 <div id="roll-area">
@@ -352,13 +354,17 @@ export default {
                         <div class="td">Dif</div>
                         <!-- table body -->
                         <div class="tr d-flex" v-for="n in 4">
-                            <div class="td">
+                            <!-- nome -->
+                            <div class="td td-hName">
                                 {{ heroes[n - 1].hName.split(',')[0] }}
+                                <font-awesome-icon icon="fa-solid fa-bolt" :class="`fa-bolt${n - 1}`" />
                             </div>
+                            <!-- posizione -->
                             <div v-for="m in 4" class="td"
                                 :class="`td${n}${m}`, { 'active': activeSqr.includes(`td${n}${m}`) }"
                                 @click="toggleActiveSqr(`td${n}${m}`)">
                             </div>
+                            <!-- difese -->
                             <div class="td gap-1">
                                 <font-awesome-icon icon="fa-solid fa-shield" class="shield shield-r"
                                     :class="`r${n}`, { 'active': activeShield.includes(`r${n}`) }"
@@ -743,5 +749,24 @@ export default {
     left: 30%;
     top: 50%;
     translate: -50% -50%;
+}
+
+.td-hName {
+    position: relative;
+}
+
+.fa-bolt {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    translate: 0 -50%;
+    color: #3f3f3f;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.fa-bolt:hover,
+.fa-bolt:active {
+    transform: scale(1.2);
 }
 </style>
