@@ -102,7 +102,7 @@ export default {
         activeSqr: [],
         activeSqrEnemy: [],
         enemyGrid: ["Name", "HP", "CD", "Target", "1L", "2L", "FY", "Hd", "Assist", "Remove"],
-        enemies: [{ nome: "Dargh", hp: "5", cd: "7", id: "00000000" }],
+        enemies: [{ nome: "Dargh", hp: "5", cd: "7", id: "00000000", tg: "5" }],
         newEnemyName: "",
         newEnemyHP: "",
         newEnemyCD: "",
@@ -193,9 +193,9 @@ export default {
         addEnemy(e) {
             let newEnemy = {};
             if (e) {
-                newEnemy = { nome: e.eName, hp: e.hp, cd: e.cd, id: this.generateId() };
+                newEnemy = { nome: e.eName, hp: e.hp, cd: e.cd, id: this.generateId(), tg: "" };
             } else {
-                newEnemy = { nome: this.newEnemyName, hp: this.newEnemyHP, cd: this.newEnemyCD, id: this.generateId() };
+                newEnemy = { nome: this.newEnemyName, hp: this.newEnemyHP, cd: this.newEnemyCD, id: this.generateId(), tg: "" };
                 this.newEnemyName = "";
                 this.newEnemyHP = "";
                 this.newEnemyCD = "";
@@ -381,10 +381,10 @@ export default {
                                 </button>
                             </div>
                             <!-- cd -->
-                            <div class="td">{{ (e.cd) }}</div>
+                            <div class="td">{{ e.cd }}</div>
                             <!-- target -->
                             <div class="target">
-                                <input type="number" class="td">
+                                <input type="number" min="1" max="4" class="td text-center" v-model="e.tg">
                             </div>
                             <!-- position -->
                             <div v-for="n in 4" class="td"
@@ -480,6 +480,7 @@ export default {
     align-items: center;
     cursor: pointer;
     transition: color 0.3s ease;
+    font-size: 0.9rem;
 }
 
 [class*="td1"]:hover {
