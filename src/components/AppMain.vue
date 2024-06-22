@@ -453,14 +453,18 @@ export default {
                     <input type="number" placeholder="CD nemico" v-model="newEnemyCD">
                     <button @click="addEnemy()" @submit.self.prevent>Aggiungi</button>
                 </section>
+                <!-- * massive enemy actions -->
                 <section id="massive-enemy-actions" class="mt-4 d-flex justify-content-center">
                     <ul class="d-flex justify-content-center gap-1 mb-0 list-unstyled">
+                        <!-- target roll -->
                         <li>
                             <button @click="getMassiveTarget()" class="bg-success text-white">Roll Targets</button>
                         </li>
+                        <!-- target reset -->
                         <li>
                             <button @click="resetTargets()" class="bg-warning">Reset Targets</button>
                         </li>
+                        <!-- remove all enemies -->
                         <li>
                             <button @click="removeAllEnemies()" class="bg-danger text-white">Rimuovi Nemici</button>
                         </li>
