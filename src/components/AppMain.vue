@@ -254,12 +254,12 @@ export default {
                     <div class="staminaq">
                         <h4>Stmn: </h4>
                         <div class="d-flex justify-content-center align-items-center gap-1">
-                            <button class="ehp" @click="updateStmnRpt('stmn', 'incr', i)">
-                                <font-awesome-icon icon="fa-solid fa-plus" />
-                            </button>
-                            <p class="m-0 fs-4">{{ hero.currentStmn }}</p>
                             <button class="ehp" @click="updateStmnRpt('stmn', 'decr', i)">
                                 <font-awesome-icon icon="fa-solid fa-minus" />
+                            </button>
+                            <p class="m-0 fs-4">{{ hero.currentStmn }}</p>
+                            <button class="ehp" @click="updateStmnRpt('stmn', 'incr', i)">
+                                <font-awesome-icon icon="fa-solid fa-plus" />
                             </button>
                         </div>
                     </div>
@@ -267,12 +267,12 @@ export default {
                     <div class="reputationq">
                         <h4>Rpt:</h4>
                         <div class="d-flex justify-content-center align-items-center gap-1">
-                            <button class="ehp" @click="updateStmnRpt('rpt', 'incr', i)">
-                                <font-awesome-icon icon="fa-solid fa-plus" />
-                            </button>
-                            <p class="m-0 fs-4">{{ hero.currentRpt }}</p>
                             <button class="ehp" @click="updateStmnRpt('rpt', 'decr', i)">
                                 <font-awesome-icon icon="fa-solid fa-minus" />
+                            </button>
+                            <p class="m-0 fs-4">{{ hero.currentRpt }}</p>
+                            <button class="ehp" @click="updateStmnRpt('rpt', 'incr', i)">
+                                <font-awesome-icon icon="fa-solid fa-plus" />
                             </button>
                         </div>
                     </div>
@@ -369,15 +369,15 @@ export default {
                             <div class="td">{{ firstLetterToCapital(e.nome) }}</div>
                             <!-- hp -->
                             <div class="td gap-1">
-                                <!-- aumenta -->
-                                <button class="ehp" @click="incrEnemyHP(i)">
-                                    <font-awesome-icon icon="fa-solid fa-plus" />
-                                </button>
-                                <!-- attuali -->
-                                <span>{{ e.hp }}</span>
                                 <!-- riduci -->
                                 <button class="ehp" @click="decrEnemyHP(i)">
                                     <font-awesome-icon icon="fa-solid fa-minus" />
+                                </button>
+                                <!-- attuali -->
+                                <span>{{ e.hp }}</span>
+                                <!-- aumenta -->
+                                <button class="ehp" @click="incrEnemyHP(i)">
+                                    <font-awesome-icon icon="fa-solid fa-plus" />
                                 </button>
                             </div>
                             <!-- cd -->
