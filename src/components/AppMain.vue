@@ -84,6 +84,12 @@ export default {
                 cd: 5
             },
             {
+                id: 6,
+                eName: "Darghound",
+                hp: 3,
+                cd: 7
+            },
+            {
                 id: 4,
                 eName: "Dargmored",
                 hp: 6,
@@ -94,12 +100,6 @@ export default {
                 eName: "Dargberration",
                 hp: 8,
                 cd: 9
-            },
-            {
-                id: 6,
-                eName: "Draghound",
-                hp: 3,
-                cd: 7
             }
         ],
         disabledButtons: [],
