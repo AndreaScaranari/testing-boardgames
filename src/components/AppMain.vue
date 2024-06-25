@@ -94,6 +94,12 @@ export default {
                 eName: "Dargberration",
                 hp: 8,
                 cd: 9
+            },
+            {
+                id: 6,
+                eName: "Draghound",
+                hp: 3,
+                cd: 7
             }
         ],
         disabledButtons: [],
