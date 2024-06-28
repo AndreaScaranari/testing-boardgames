@@ -8,12 +8,12 @@ export default {
                 hName: "Kaen, the Flame",
                 color: "#e81010",
                 stats: {
-                    stmn: 9,
+                    stmn: 10,
                     str: 2,
                     abi: 0,
                     arc: 1,
                 },
-                currentStmn: 9,
+                currentStmn: 10,
                 currentRpt: 0,
                 rollResult: "???",
                 actions: ["attack", "spell"]
@@ -23,12 +23,12 @@ export default {
                 hName: "Shiva, the Blizzard",
                 color: "#b0c9ff",
                 stats: {
-                    stmn: 6,
+                    stmn: 7,
                     str: 0,
                     abi: 2,
                     arc: 1,
                 },
-                currentStmn: 6,
+                currentStmn: 7,
                 currentRpt: 0,
                 rollResult: "???",
                 actions: ["attack", "spell"]
@@ -38,12 +38,12 @@ export default {
                 hName: "Ray, the Thunder",
                 color: "#f8c52a",
                 stats: {
-                    stmn: 8,
+                    stmn: 9,
                     str: 1,
                     abi: 0,
                     arc: 2,
                 },
-                currentStmn: 8,
+                currentStmn: 9,
                 currentRpt: 0,
                 rollResult: "???",
                 actions: ["defend", "sorcery"]
@@ -53,12 +53,12 @@ export default {
                 hName: "Seiya, the Moonlight",
                 color: "#35177f",
                 stats: {
-                    stmn: 7,
+                    stmn: 8,
                     str: 0,
                     abi: 1,
                     arc: 2,
                 },
-                currentStmn: 7,
+                currentStmn: 8,
                 currentRpt: 0,
                 rollResult: "???",
                 actions: ["spell", "sorcery"]
